@@ -462,6 +462,40 @@ namespace Content.Scripts
                 weights[i] /= _summ;
         }
 
+        public static K GetByID<T, K>(this Dictionary<T, K> dictionary, int id)
+        {
+            int i = 0;
+            foreach (var b in dictionary)
+            {
+                if (i == id)
+                {
+                    return b.Value;
+                }
+
+                i++;
+            }
+
+            return default;
+        }
+        
+        public static K GetByID<T, K>(this Dictionary<T, K> dictionary, int id, out T key)
+        {
+            int i = 0;
+            foreach (var b in dictionary)
+            {
+                if (i == id)
+                {
+                    key = b.Key;
+                    return b.Value;
+                }
+
+                i++;
+            }
+
+            key = default;
+            return default;
+        }
+        
         #endregion
 
         #region COLORS
@@ -762,7 +796,40 @@ namespace Content.Scripts
         #endregion
 
         #region UI
+        public static void SetAnchoredPosX(this RectTransform t, float x)
+        {
+            Vector3 p = t.anchoredPosition;
+            p.x = x;
+            t.anchoredPosition = p;
+        }
 
+        public static void SetAnchoredPosY(this RectTransform t, float y)
+        {
+            Vector3 p = t.anchoredPosition;
+            p.y = y;
+            t.anchoredPosition = p;
+        }
+
+        public static void SetAnchoredPosZ(this RectTransform t, float z)
+        {
+            Vector3 p = t.anchoredPosition;
+            p.z = z;
+            t.anchoredPosition = p;
+        }
+        
+        public static void SetSizeDeltaX(this RectTransform t, float x)
+        {
+            Vector2 p = t.sizeDelta;
+            p.x = x;
+            t.sizeDelta = p;
+        }
+
+        public static void SetSizeDeltaY(this RectTransform t, float y)
+        {
+            Vector2 p = t.sizeDelta;
+            p.y = y;
+            t.sizeDelta = p;
+        }
         public static void ChangeSizeDeltaX(this RectTransform rectTransform, float value)
         {
             rectTransform.sizeDelta = new Vector2(value, rectTransform.sizeDelta.y);
@@ -776,11 +843,30 @@ namespace Content.Scripts
 
         #region TWEENS
 
-        public static Tween ScaleFromZero(this Transform transform, float duration)
+        public static Tween ScaleFromZero(this Transform transform, float duration, Vector3 scale = default)
         {
-            var scale = transform.localScale;
+            if (scale == default)
+            {
+                scale = Vector3.one;
+            }
             transform.localScale = Vector3.zero;
             return transform.DOScale(scale, duration);
+        }
+        
+        public static Tween ScaleToZero(this Transform transform, float duration)
+        {
+            return transform.DOScale(Vector3.zero, duration);
+        }
+        
+        public static Tween AlphaFromZero(this CanvasGroup canvas, float duration)
+        {
+            canvas.alpha = 0;
+            return canvas.DOFade(1, duration);
+        }
+        
+        public static Tween AlphaToZero(this CanvasGroup canvas, float duration)
+        {
+            return canvas.DOFade(0, duration);
         }
         
         #endregion
